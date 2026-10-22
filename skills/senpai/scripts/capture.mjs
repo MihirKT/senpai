@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 // Crawl same-origin pages: rendered HTML, assets, screenshots per viewport, scroll video + frames,
 // motion inventory, element inventory, design tokens. With --mirror=1 also writes a runnable static clone.
-// Usage: node capture.mjs --url=https://site --out=./senpai-out [--pages=30] [--viewports=1440x900,390x844]
+// Usage: node capture.mjs --url=https://site --out=./senpai-out [--pages=N (default: whole site)] [--viewports=1440x900,390x844]
 //        [--frames=6] [--video=1] [--mirror=1] [--ignore-robots=0] [--delay=500]
 import { chromium } from 'playwright';
 import fs from 'node:fs/promises';
@@ -15,7 +15,7 @@ if (!a.url) { console.error('need --url='); process.exit(2); }
 const start = new URL((await fetch(a.url).catch(() => null))?.url || a.url);
 const origin = start.origin;
 const out = path.resolve(a.out || './senpai-out');
-const maxPages = +(a.pages || 30);
+const maxPages = +(a.pages || 0) || Infinity; // 0 or unset = whole site
 const viewports = viewportsFrom(a.viewports);
 const frames = +(a.frames ?? 6);
 const mirror = a.mirror !== '0';

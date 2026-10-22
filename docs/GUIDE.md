@@ -161,7 +161,7 @@ Pass in the command (`pages=10`) or ask in plain words.
 
 | Option | Default | Meaning |
 |---|---|---|
-| `pages` | 30 | Max pages crawled (same domain, follows links) |
+| `pages` | whole site | Max pages crawled (same domain, follows links). Leave out to clone every page |
 | `viewports` | `1440x900,390x844` | Comma list `WxH` |
 | `threshold` | 2 | Max diff % that counts as a match |
 | `stack` | static | rebuild target: static / next / react / astro |

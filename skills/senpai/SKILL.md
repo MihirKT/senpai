@@ -24,7 +24,7 @@ Input: `$ARGUMENTS`. Scripts capture everything; Claude only reads summaries, di
    | `rebuild` | capture + clean source in chosen stack + verify loop |
    | `verify` | diff existing clone (dir or `--clone-url`) vs capture |
 3. **Stack** (rebuild only): static (default) / next / react / astro.
-4. **Scope**: page cap (default 30), viewports (default `1440x900,390x844`).
+4. **Scope**: page cap (default: whole site, no cap; only set one if user asks), viewports (default `1440x900,390x844`).
 
 Rights rules (not negotiable):
 - Study mode: never `mirror`; run capture with `--mirror=0`. Rebuild layout, spacing, motion, structure only. Replace all copy, images, logos, brand names, icons with original placeholders. Output is a design-study scaffold, not a copy.
@@ -39,7 +39,7 @@ npx --prefix ${CLAUDE_SKILL_DIR} playwright install chromium
 
 ## Step 2: capture
 ```bash
-node ${CLAUDE_SKILL_DIR}/scripts/capture.mjs --url=<url> --out=./senpai-<host> --pages=30 [--mirror=0] [--viewports=..] [--frames=6] [--video=1] [--delay=500]
+node ${CLAUDE_SKILL_DIR}/scripts/capture.mjs --url=<url> --out=./senpai-<host> [--pages=N] [--mirror=0] [--viewports=..] [--frames=6] [--video=1] [--delay=500]
 ```
 Writes `<out>/`:
 - `manifest.json`: pages, skipped (+why), queued-not-visited, design tokens (top colors/fonts/sizes/radii/shadows). **Read this first, only this.**
