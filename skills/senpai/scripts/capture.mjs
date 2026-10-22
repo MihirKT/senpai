@@ -128,6 +128,7 @@ const ELEMENTS = () => {
 const top = (o, n = 15) => Object.entries(o).sort((x, y) => y[1] - x[1]).slice(0, n);
 
 // ---- crawl
+await fs.mkdir(out, { recursive: true });
 const disallow = await robotsDisallow();
 const blocked = p => disallow.some(r => p.startsWith(r.replace(/\*.*$/, '')));
 const browser = await chromium.launch();
