@@ -27,5 +27,8 @@ if (!fs.existsSync(path.join(out, 'clone', 'index.html'))) { console.error(`no p
 run('node', [path.join(dir, 'verify.mjs'), `--out=${out}`]); // non-zero = some page over threshold; still serve
 
 const { serveDir } = await import('./lib.mjs');
-serveDir(path.join(out, 'clone'), port).on('error', e => { console.error(e.message); process.exit(1); });
-console.log(`SERVING http://localhost:${port}  (clone: ${out}/clone, report: ${out}/verify/report.json)`);
+// port busy (e.g. a previous clone still serving) -> try the next one
+const listen = p => serveDir(path.join(out, 'clone'), p)
+  .on('listening', () => console.log(`SERVING http://localhost:${p}  (clone: ${out}/clone, report: ${out}/verify/report.json)`))
+  .on('error', e => e.code === 'EADDRINUSE' && p < +port + 20 ? listen(p + 1) : (console.error(e.message), process.exit(1)));
+listen(+port);

@@ -54,7 +54,7 @@ Use this, not `npx serve`: sites that add `?rnd=` / `?v=` to script URLs break o
 | Problem | Fix |
 |---|---|
 | Nothing cloned, `robots.txt` | Site blocks crawlers. Your own site: tell Senpai it's yours, it re-runs with `--ignore-robots=1`. |
-| `EADDRINUSE` | Port busy. Senpai retries on 4174. |
+| Port 4173 busy | Handled: next free port (4174, 4175, ...) is used; the link shows which. |
 | `HTTP 403` / challenge page | Site blocks bots. Senpai stops; no bypass. |
 | Browser missing / Linux libs | `npx --prefix ~/.claude/skills/senpai playwright install --with-deps chromium` |
 | Some pages over 2% | Server still runs. Ask Senpai "fix the remaining diffs". |

@@ -30,7 +30,7 @@ Output style: terse. No narration, no tables, no recap. Final message = link + o
 | Output | Do |
 |---|---|
 | `skipped ... robots.txt` | Site blocks crawlers. If user said it's their own site, re-run with `--ignore-robots=1`. Otherwise stop, tell them. |
-| `EADDRINUSE` | Re-run with `--port=4174`. |
+| `EADDRINUSE` | Handled: next free port is used automatically; read the port from the SERVING line. |
 | `HTTP 403` / challenge page | Site blocks bots. Stop, tell user. Never bypass. |
 | pages over 2% | Server still runs. Offer: "fix the remaining diffs?" If yes: crop `<out>/verify/<slug>@<w>.diff.png` red areas vs `<out>/pages/<slug>/<w>.png` (PIL, crops only), fix in `<out>/clone`, re-check with `node ${CLAUDE_SKILL_DIR}/scripts/verify.mjs --out=<out> --only=<slug>`. Max 3 tries per page. |
 
