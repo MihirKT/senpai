@@ -1,0 +1,7 @@
+{
+  "name": "senpai",
+  "owner": { "name": "Mihir Tiwari" },
+  "plugins": [
+    { "name": "senpai", "source": "./", "description": "Website clone + visual verify skill" }
+  ]
+}

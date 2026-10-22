@@ -1,0 +1,8 @@
+{
+  "name": "senpai",
+  "version": "0.1.0",
+  "description": "Clone, rebuild, or study a website page-by-page with Playwright capture (screenshots, motion, elements, assets) and pixel-diff verification.",
+  "author": { "name": "Mihir Tiwari" },
+  "license": "MIT",
+  "keywords": ["clone", "website", "playwright", "screenshot", "visual-diff", "scraping"]
+}
