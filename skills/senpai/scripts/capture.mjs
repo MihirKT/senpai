@@ -57,19 +57,21 @@ function localPath(u, ct) {
 async function saveAsset(res) {
   const req = res.request();
   const type = req.resourceType();
-  if (req.method() !== 'GET' || res.status() !== 200) return;
+  // 206 = partial range (video/audio streaming); body is a chunk, so refetch the whole file below
+  if (req.method() !== 'GET' || ![200, 206].includes(res.status())) return;
   if (!['stylesheet', 'script', 'image', 'font', 'media', 'fetch', 'xhr'].includes(type)) return;
   const u = new URL(res.url());
   if (!/^https?:$/.test(u.protocol) || assets.has(u.href)) return;
   if ((type === 'fetch' || type === 'xhr') && u.origin !== origin) return;
   try {
-    const body = await res.body();
+    assets.set(u.href, null); // claim now: range requests for one video arrive in parallel
+    const body = res.status() === 206 ? Buffer.from(await (await fetch(u.href)).arrayBuffer()) : await res.body();
     const lp = localPath(u, res.headers()['content-type'] || '');
     const file = path.join(out, 'assets', lp);
     await fs.mkdir(path.dirname(file), { recursive: true });
     await fs.writeFile(file, body);
     assets.set(u.href, lp);
-  } catch { /* redirect/empty bodies have nothing to save */ }
+  } catch { assets.delete(u.href); /* redirect/empty bodies have nothing to save */ }
 }
 
 // ---- in-page probes
@@ -162,7 +164,7 @@ while (queue.length && pages.length < maxPages) {
     const title = await page.title();
     const links = await page.$$eval('a[href]', as => as.map(x => x.href));
     for (const l of links) {
-      const u = new URL(l); u.hash = ''; u.search = '';
+      const u = new URL(l); u.hash = ''; u.search = ''; u.pathname = u.pathname.replace(/\/{2,}/g, '/');
       if (u.origin === origin && !seen.has(u.href) && !/\.(pdf|zip|jpe?g|png|gif|webp|svg|mp4|docx?|xlsx?)$/i.test(u.pathname)) { seen.add(u.href); queue.push(u.href); }
     }
     await fs.writeFile(path.join(dir, 'source.html'), html);

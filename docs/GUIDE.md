@@ -64,7 +64,7 @@ You can also skip commands and just say: *"clone https://mysite.com with senpai"
 
 Open the clone yourself:
 ```bash
-npx serve ./senpai-www.mysite.com/clone
+node skills/senpai/scripts/serve.mjs --dir=./senpai-www.mysite.com/clone   # http://localhost:4173
 ```
 
 ## 4. Examples
@@ -191,6 +191,9 @@ node scripts/verify.mjs --out=./senpai-mysite
 # diff a dev server
 node scripts/verify.mjs --out=./senpai-mysite --clone-url=http://localhost:3000 --threshold=1
 
+# view the clone (handles cache-busted ?rnd= assets)
+node scripts/serve.mjs --dir=./senpai-mysite/clone --port=4173
+
 # one page
 node scripts/verify.mjs --out=./senpai-mysite --only=index
 ```
@@ -205,7 +208,7 @@ Run these in order. Each has an expected result.
    Expect `senpai-example.com/manifest.json` with 1 page, and `pages/index/1440.png` + `390.png`.
 3. **Mirror your own site**: `/senpai:mirror https://<your-site> pages=3`
    Expect `clone/` and a final line like `pages 3 | within 2%: 4/6 | worst: ...`.
-   Open it: `npx serve ./senpai-<host>/clone`.
+   Open it: `node <skill-dir>/scripts/serve.mjs --dir=./senpai-<host>/clone` (plain `npx serve` breaks cache-busted assets).
 4. **Look at a diff**: open `verify/index@1440.diff.png`. Red areas are mismatches.
 5. **Study-mode guard**: `/senpai:mirror https://<site you don't own>` and answer "someone else's". Expect it to refuse `mirror` and offer a placeholder rebuild.
 6. **Scripts alone**: section 9 commands give `ok index` lines and a `pages N | ...` summary.

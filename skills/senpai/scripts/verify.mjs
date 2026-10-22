@@ -5,10 +5,9 @@
 import { chromium } from 'playwright';
 import { PNG } from 'pngjs';
 import pixelmatch from 'pixelmatch';
-import http from 'node:http';
 import fs from 'node:fs/promises';
 import path from 'node:path';
-import { parseArgs, settle, shoot } from './lib.mjs';
+import { parseArgs, settle, shoot, serveDir } from './lib.mjs';
 
 const a = parseArgs(process.argv.slice(2));
 const out = path.resolve(a.out || './senpai-out');
@@ -16,21 +15,9 @@ const threshold = +(a.threshold || 2);
 const manifest = JSON.parse(await fs.readFile(path.join(out, 'manifest.json'), 'utf8'));
 const only = a.only ? new Set(a.only.split(',')) : null;
 
-const MIME = { '.html': 'text/html', '.css': 'text/css', '.js': 'text/javascript', '.mjs': 'text/javascript', '.json': 'application/json',
-  '.svg': 'image/svg+xml', '.png': 'image/png', '.jpg': 'image/jpeg', '.jpeg': 'image/jpeg', '.webp': 'image/webp', '.avif': 'image/avif',
-  '.gif': 'image/gif', '.ico': 'image/x-icon', '.woff2': 'font/woff2', '.woff': 'font/woff', '.ttf': 'font/ttf', '.mp4': 'video/mp4', '.webm': 'video/webm' };
-
 let server, base = a['clone-url'];
 if (!base) {
-  const root = path.join(out, 'clone');
-  server = http.createServer(async (req, res) => {
-    let p = path.join(root, decodeURIComponent(new URL(req.url, 'http://x').pathname));
-    if (!p.startsWith(root)) { res.writeHead(403).end(); return; }
-    for (const c of [p, path.join(p, 'index.html'), p + '.html']) {
-      try { if ((await fs.stat(c)).isFile()) { res.writeHead(200, { 'content-type': MIME[path.extname(c)] || 'application/octet-stream' }); res.end(await fs.readFile(c)); return; } } catch {}
-    }
-    res.writeHead(404).end();
-  }).listen(0);
+  server = serveDir(path.join(out, 'clone'), 0);
   base = `http://localhost:${server.address().port}`;
 }
 

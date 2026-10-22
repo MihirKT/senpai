@@ -56,7 +56,7 @@ From `motion.json` `libs` + frames, list per page: entrance reveals, scroll-link
 Hover/click/menu/modal states: use Claude in Chrome (load `claude-in-chrome` skill) or Playwright MCP: hover each nav item/button/card, open menus, screenshot, record `gif_creator` for motion worth matching. Capture only what `motion.json` + frames don't already show.
 
 ## Step 4: build
-- **mirror**: `clone/` is the result. Go to verify.
+- **mirror**: `clone/` is the result. View: `node ${CLAUDE_SKILL_DIR}/scripts/serve.mjs --dir=<out>/clone` (not `npx serve`: cache-busted assets 404). Go to verify.
 - **rebuild**: one component/section per visual block in `elements.json`. Tokens from `manifest.tokens` into CSS vars/theme. Copy captured assets from `assets/` (rights only). Recreate motion with the same lib `motion.json` detected; match durations/easing from `anims`/`transitions`. Serve with stack dev server.
 
 ## Step 5: verify loop
